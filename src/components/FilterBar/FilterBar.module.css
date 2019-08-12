@@ -1,0 +1,8 @@
+.FilterBar {
+  display: flex;
+  flex-direction: row;
+}
+
+.FilterBar__item {
+  margin: 1rem;
+}

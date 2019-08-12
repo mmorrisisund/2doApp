@@ -1,0 +1,10 @@
+Components to Build:
+  ☐ Navbar
+  ✔ List @done(19-08-12 15:33)
+  ✔ Filter bar @done(19-08-12 16:31)
+  ✔ Input Item @done(19-08-12 15:47)
+  ✔ Item List @done(19-08-12 15:47)
+    ✔ Item @done(19-08-12 15:47)
+
+Refactors:
+  ☐ Add state to input box; Try to remove unnecessary rerenders of TodoItemList

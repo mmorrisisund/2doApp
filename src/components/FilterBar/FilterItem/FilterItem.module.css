@@ -1,0 +1,18 @@
+.FilterItem {
+  color: #ccc;
+  margin: 0.5rem;
+  transition: color 200ms ease-out;
+}
+
+.FilterItem:hover {
+  color: #ff2058;
+  cursor: pointer;
+}
+
+.active {
+  color: #ff2058;
+}
+
+.active:hover {
+  cursor: default;
+}
