@@ -5,6 +5,12 @@
   line-height: 2.6rem;
 }
 
+.TodoItem_finished {
+  color: #aaa;
+  text-decoration: line-through;
+  width: 100%;
+}
+
 .TodoItem__description {
   cursor: pointer;
   transition: font-size 250ms ease-out;
@@ -16,18 +22,12 @@
   font-size: 1.3rem;
 }
 
-.finished {
-  color: #aaa;
-  text-decoration: line-through;
-  width: 100%;
-}
-
-i {
+.TodoItem__icon {
   color: #ff2058;
   transition: font-size 100ms ease-out;
 }
 
-i:hover {
+.TodoItem__icon:hover {
   cursor: pointer;
   font-size: 1.6rem;
 }

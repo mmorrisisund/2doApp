@@ -8,12 +8,15 @@ const TodoItem = ({ item, onToggleStatus, onRemoveItem }) => {
       <span
         onClick={() => onToggleStatus(item.id)}
         className={`${css.TodoItem__description}  ${
-          item.finished ? css.finished : null
+          item.finished ? css.TodoItem_finished : null
         }`}
       >
         {item.description}
       </span>
-      <i className='material-icons' onClick={() => onRemoveItem(item.id)}>
+      <i
+        className={`material-icons ${css.TodoItem__icon}`}
+        onClick={() => onRemoveItem(item.id)}
+      >
         delete
       </i>
     </li>
