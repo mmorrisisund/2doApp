@@ -21,6 +21,7 @@ class InputBox extends Component {
           id='item'
           value={this.state.value}
           onChange={this.onValueChangeHandler}
+          autoComplete='off'
         />
         <button onClick={this.onClickHandler}>Add Todo</button>
       </div>

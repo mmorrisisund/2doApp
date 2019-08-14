@@ -7,8 +7,9 @@
 
 .TodoItem__description {
   cursor: pointer;
-  width: 100%;
   transition: font-size 250ms ease-out;
+  user-select: none;
+  width: 100%;
 }
 
 .TodoItem__description:hover {

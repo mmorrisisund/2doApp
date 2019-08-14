@@ -5,41 +5,46 @@ import Card from '../Card/Card'
 import FilterBar from '../FilterBar/FilterBar'
 import InputBox from '../InputBox/InputBox'
 import TodoItemList from '../TodoItemList/TodoItemList'
+import {
+  addTodo,
+  getTodoList,
+  deleteTodo,
+  toggleStatus
+} from '../../services/firebase'
 
 export default class TodoList extends Component {
   state = {
     items: [],
-    nextItemId: 1,
     filter: 'All'
   }
 
-  onAddItemHandler = item => {
-    if (item) {
+  async componentDidMount () {
+    const todos = await getTodoList()
+    this.setState({ items: [...todos] })
+  }
+
+  onAddItemHandler = async description => {
+    if (description) {
+      const newTodo = await addTodo(description)
       this.setState(prevState => {
-        const newItem = {
-          id: prevState.nextItemId,
-          description: item,
-          finished: false
-        }
-        return {
-          items: [...prevState.items, newItem],
-          nextItemId: prevState.nextItemId + 1
-        }
+        return { items: [...prevState.items, newTodo] }
       })
     }
   }
 
-  onToggleStatusHandler = id => {
-    this.setState(prevState => {
-      const updatedItems = prevState.items.map(item => {
-        if (item.id === id) item.finished = !item.finished
-        return item
-      })
-      return { items: updatedItems }
+  onToggleStatusHandler = async id => {
+    const todo = this.state.items.find(todo => todo.id === id)
+    const newTodo = await toggleStatus(todo)
+
+    const updatedItems = this.state.items.map(item => {
+      if (item.id === id) return newTodo
+      return item
     })
+    this.setState({ items: updatedItems })
   }
 
-  onRemoveItemHandler = id => {
+  onRemoveItemHandler = async id => {
+    await deleteTodo(id)
     this.setState(prevState => ({
       items: prevState.items.filter(item => item.id !== id)
     }))
