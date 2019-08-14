@@ -19,10 +19,10 @@ export const addTodo = async todo => {
     finished: false
   }
 
-  const { data: name } = await axios.post(
-    '/todoList.json',
-    JSON.stringify(newTodo)
-  )
+  const {
+    data: { name }
+  } = await axios.post('/todoList.json', JSON.stringify(newTodo))
+
   newTodo.id = name
   return newTodo
 }
