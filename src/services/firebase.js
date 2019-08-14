@@ -3,14 +3,17 @@ import axios from './axios'
 export const getTodoList = async () => {
   const { data } = await axios.get('/todoList.json')
 
-  const todos = Object.keys(data).map(key => {
-    return {
-      id: key,
-      description: data[key].description,
-      finished: data[key].finished
-    }
-  })
-  return todos
+  if (data) {
+    const todos = Object.keys(data).map(key => {
+      return {
+        id: key,
+        description: data[key].description,
+        finished: data[key].finished
+      }
+    })
+    return todos
+  }
+  return []
 }
 // createTodoList
 export const addTodo = async todo => {
