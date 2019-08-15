@@ -28,7 +28,7 @@ class InputBox extends Component {
           autoComplete='off'
           onKeyDown={this.onKeyDownHandler}
         />
-        <button onClick={this.onClickHandler}>Add Todo</button>
+        <button onClick={this.onClickHandler}>{this.props.children}</button>
       </div>
     )
   }

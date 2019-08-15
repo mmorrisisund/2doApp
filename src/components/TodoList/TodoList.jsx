@@ -87,7 +87,9 @@ export default class TodoList extends Component {
           <InputBox
             onValueChange={this.onValueChangeHandler}
             onAddItem={this.onAddTodoHandler}
-          />
+          >
+            Add Todo
+          </InputBox>
           <ListDisplay>{this.createTodoItems()} </ListDisplay>
         </Card>
       </div>
