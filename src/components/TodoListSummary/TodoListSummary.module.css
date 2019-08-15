@@ -1,0 +1,31 @@
+.TodoListSummary {
+  padding: 10px;
+}
+
+.header {
+  color: #ff2058;
+  margin: 5px;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  height: 50px;
+}
+
+.content__counts {
+  margin-left: 10px;
+  color: #555;
+}
+
+.content__countsText {
+  display: inline;
+  margin-right: 40px;
+}
+
+.content__countsDigit {
+  color: #ff2058;
+  margin-left: 15px;
+}
