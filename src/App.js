@@ -7,14 +7,16 @@ import css from './App.module.css'
 
 function App () {
   return (
-    <div>
+    <div className={css.App}>
+      <div className={css.App__Header}>
+        <Navbar>Navigation</Navbar>
+      </div>
       <div className={css.App__Sidebar}>
         <TodoLists />
       </div>
       <div className={css.App_Content}>
         <TodoList />
       </div>
-      <Navbar>Navigation</Navbar>
     </div>
   )
 }
