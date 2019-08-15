@@ -21,13 +21,3 @@
 .TodoItem__description:hover {
   font-size: 1.3rem;
 }
-
-.TodoItem__icon {
-  color: #ff2058;
-  transition: font-size 100ms ease-out;
-}
-
-.TodoItem__icon:hover {
-  cursor: pointer;
-  font-size: 1.6rem;
-}

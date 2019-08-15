@@ -1,6 +1,7 @@
 import React from 'react'
 
 import css from './TodoItem.module.css'
+import DeleteIcon from '../DeleteIcon/DeleteIcon'
 
 const TodoItem = ({ item, onToggleStatus, onRemoveItem }) => {
   return (
@@ -13,12 +14,7 @@ const TodoItem = ({ item, onToggleStatus, onRemoveItem }) => {
       >
         {item.description}
       </span>
-      <i
-        className={`material-icons ${css.TodoItem__icon}`}
-        onClick={() => onRemoveItem(item.id)}
-      >
-        delete
-      </i>
+      <DeleteIcon id={item.id} onRemoveItem={onRemoveItem} />
     </li>
   )
 }
