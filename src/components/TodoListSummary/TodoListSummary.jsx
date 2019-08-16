@@ -3,7 +3,7 @@ import React from 'react'
 import css from './TodoListSummary.module.css'
 import DeleteIcon from '../DeleteIcon/DeleteIcon'
 
-const TodoListSummary = ({ summary }) => {
+const TodoListSummary = ({ summary, onRemoveItem }) => {
   return (
     <div className={css.TodoListSummary}>
       <h3 className={css.header}>{summary.name}</h3>
@@ -22,7 +22,7 @@ const TodoListSummary = ({ summary }) => {
             </span>
           </p>
         </div>
-        <DeleteIcon />
+        <DeleteIcon id={summary.id} onRemoveItem={onRemoveItem} />
       </div>
     </div>
   )
