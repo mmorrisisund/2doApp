@@ -1,22 +1,47 @@
-import axios from './axios'
+import axios from 'axios'
 
-export const getTodoList = async () => {
-  const { data } = await axios.get('/todoList.json')
+let fb
 
-  if (data) {
-    const todos = Object.keys(data).map(key => {
+export default ({ userId, listId }) => {
+  // TODO: Figure out how to not recreate each time
+  // if (fb && userId === userId && listID === lis) return fb
+
+  const baseUrl = `https://todoapp-8a03f.firebaseio.com/users/${userId}/userLists/${listId}`
+  fb = axios.create({ baseURL: baseUrl })
+
+  return {
+    getTodoList,
+    addTodo,
+    deleteTodo,
+    toggleStatus
+  }
+}
+
+const getTodoList = async () => {
+  const {
+    data: { name, todos }
+  } = await fb.get(`.json`)
+
+  if (todos) {
+    const todosArr = Object.keys(todos).map(key => {
       return {
         id: key,
-        description: data[key].description,
-        finished: data[key].finished
+        description: todos[key].description,
+        finished: todos[key].finished
       }
     })
-    return todos
+    return {
+      name,
+      todos: todosArr
+    }
   }
-  return []
+  return {
+    name,
+    todos: []
+  }
 }
 // createTodoList
-export const addTodo = async todo => {
+const addTodo = async todo => {
   const newTodo = {
     description: todo,
     finished: false
@@ -24,18 +49,18 @@ export const addTodo = async todo => {
 
   const {
     data: { name }
-  } = await axios.post('/todoList.json', JSON.stringify(newTodo))
+  } = await fb.post('/todos.json', JSON.stringify(newTodo))
 
   newTodo.id = name
   return newTodo
 }
 
-export const deleteTodo = async id => {
-  await axios.delete(`/todoList/${id}.json`)
+const deleteTodo = async id => {
+  await fb.delete(`/todos/${id}.json`)
 }
 
-export const toggleStatus = async todo => {
+const toggleStatus = async todo => {
   todo.finished = !todo.finished
-  await axios.patch(`/todoList/${todo.id}.json`, { finished: todo.finished })
+  await fb.patch(`/todos/${todo.id}.json`, { finished: todo.finished })
   return todo
 }

@@ -6,27 +6,24 @@ import FilterBar from '../FilterBar/FilterBar'
 import InputBox from '../InputBox/InputBox'
 import ListDisplay from '../ListDisplay/ListDisplay'
 import TodoItem from '../TodoItem/TodoItem'
-import {
-  addTodo,
-  getTodoList,
-  deleteTodo,
-  toggleStatus
-} from '../../services/firebase'
+import firebase from '../../services/firebase'
 
 export default class TodoList extends Component {
   state = {
+    name: {},
     todos: [],
     filter: 'All'
   }
+  fb = firebase({ userId: 'user1', listId: this.props.listId })
 
   async componentDidMount () {
-    const todos = await getTodoList()
-    this.setState({ todos: [...todos] })
+    const { name, todos } = await this.fb.getTodoList(this.props.listId)
+    this.setState({ name, todos: [...todos] })
   }
 
   onAddTodoHandler = async description => {
     if (description) {
-      const newTodo = await addTodo(description)
+      const newTodo = await this.fb.addTodo(description)
       this.setState(prevState => {
         return { todos: [...prevState.todos, newTodo] }
       })
@@ -35,7 +32,7 @@ export default class TodoList extends Component {
 
   onToggleStatusHandler = async id => {
     const todo = this.state.todos.find(todo => todo.id === id)
-    const newTodo = await toggleStatus(todo)
+    const newTodo = await this.fb.toggleStatus(todo)
 
     const updatedTodos = this.state.todos.map(todo => {
       if (todo.id === id) return newTodo
@@ -45,7 +42,7 @@ export default class TodoList extends Component {
   }
 
   onRemoveTodoHandler = async id => {
-    await deleteTodo(id)
+    await this.fb.deleteTodo(id)
     this.setState(prevState => ({
       todos: prevState.todos.filter(todo => todo.id !== id)
     }))
