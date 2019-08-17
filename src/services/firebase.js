@@ -20,7 +20,9 @@ export default config => {
     addTodo,
     deleteTodo,
     toggleStatus,
-    setListId
+    setListId,
+    addList,
+    deleteList
   }
 }
 
@@ -33,18 +35,24 @@ const getTodoLists = async () => {
 
   const { data: lists } = await fb.get(`/users/${userId}/userLists.json`)
 
-  return Object.entries(lists).map(list => {
-    const todos = Object.entries(list[1].todos).map(todo => ({
-      ...todo[1],
-      id: todo[0]
-    }))
+  if (lists) {
+    return Object.entries(lists).map(list => {
+      let todos = []
+      if (list[1].todos) {
+        todos = Object.entries(list[1].todos).map(todo => ({
+          ...todo[1],
+          id: todo[0]
+        }))
+      }
 
-    return {
-      listId: list[0],
-      name: list[1].name,
-      todos
-    }
-  })
+      return {
+        listId: list[0],
+        name: list[1].name,
+        todos
+      }
+    })
+  }
+  return []
 }
 
 const getTodoList = async () => {
@@ -109,4 +117,24 @@ const toggleStatus = async todo => {
     finished: todo.finished
   })
   return todo
+}
+
+const addList = async listName => {
+  if (!userId) throw new Error('User Id must be set')
+
+  const {
+    data: { name }
+  } = await fb.post(`/users/${userId}/userLists.json`, { name: listName })
+
+  return {
+    listId: name,
+    name: listName,
+    todos: []
+  }
+}
+
+const deleteList = async id => {
+  if (!userId) throw new Error('User Id must be set')
+
+  await fb.delete(`/users/${userId}/userLists/${id}.json`)
 }

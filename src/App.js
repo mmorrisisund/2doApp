@@ -10,26 +10,30 @@ class App extends Component {
   state = {
     userId: 'user1',
     todoLists: [],
-    selectedList: ''
+    currentList: undefined
   }
 
   fb = firebase({ userId: this.state.userId })
 
   async componentDidMount () {
     const todoLists = await this.fb.getTodoLists()
-    this.setState({ todoLists, selectedList: 0 })
-    this.fb.setListId(todoLists[0].listId)
+    if (todoLists.length > 0) {
+      this.setState({
+        todoLists,
+        currentList: todoLists[0]
+      })
+      this.fb.setListId(todoLists[0].listId)
+    }
   }
 
   onTodoAddedHandler = async description => {
     const newTodo = await this.fb.addTodo(description)
 
     this.setState(prevState => {
-      const { selectedList, todoLists } = prevState
-      const { listId } = todoLists[selectedList]
+      const { currentList, todoLists } = prevState
 
       const updatedLists = todoLists.map(list => {
-        if (list.listId === listId) {
+        if (list.listId === currentList.listId) {
           return {
             ...list,
             todos: [...list.todos, newTodo]
@@ -40,7 +44,10 @@ class App extends Component {
 
       return {
         ...prevState,
-        todoLists: updatedLists
+        todoLists: updatedLists,
+        currentList: updatedLists.find(
+          list => list.listId === currentList.listId
+        )
       }
     })
   }
@@ -49,11 +56,10 @@ class App extends Component {
     await this.fb.deleteTodo(todoId)
 
     this.setState(prevState => {
-      const { selectedList, todoLists } = prevState
-      const { listId } = todoLists[selectedList]
+      const { currentList, todoLists } = prevState
 
       const updatedLists = todoLists.map(list => {
-        if (list.listId === listId) {
+        if (list.listId === currentList.listId) {
           return {
             ...list,
             todos: list.todos.filter(todo => todo.id !== todoId)
@@ -64,22 +70,26 @@ class App extends Component {
 
       return {
         ...prevState,
-        todoLists: updatedLists
+        todoLists: updatedLists,
+        currentList: updatedLists.find(
+          list => list.listId === currentList.listId
+        )
       }
     })
   }
 
   onTodoStatusToggledHandler = async todoId => {
-    const { todoLists, selectedList } = this.state
-    const todo = todoLists[selectedList].todos.find(todo => todo.id === todoId)
+    const { todoLists, currentList } = this.state
+    const todo = todoLists
+      .find(list => list.listId === currentList.listId)
+      .todos.find(todo => todo.id === todoId)
     const updatedTodo = await this.fb.toggleStatus(todo)
 
     this.setState(prevState => {
-      const { selectedList, todoLists } = prevState
-      const { listId } = todoLists[selectedList]
+      const { currentList, todoLists } = prevState
 
       const updatedLists = todoLists.map(list => {
-        if (list.listId === listId) {
+        if (list.listId === currentList.listId) {
           const todos = list.todos.map(todo => {
             if (todo.id === todoId) return updatedTodo
             return todo
@@ -100,15 +110,34 @@ class App extends Component {
   }
 
   onListAddedHandler = async name => {
-
+    const newList = await this.fb.addList(name)
+    this.setState({
+      todoLists: [...this.state.todoLists, newList],
+      selectedList: newList.listId,
+      currentList: newList
+    })
   }
 
   onListRemovedHandler = async listId => {
+    await this.fb.deleteList(listId)
+    const filteredList = this.state.todoLists.filter(
+      list => list.listId !== listId
+    )
+    this.setState({ todoLists: filteredList })
 
+    if (this.state.currentList.listId === listId) {
+      const newCurrentList =
+        this.state.todoLists.length > 0 ? this.state.todoLists[0] : undefined
+      this.setState({ currentList: newCurrentList })
+    }
   }
 
   onListSelectedHandler = listId => {
-
+    this.setState(state => {
+      return {
+        currentList: state.todoLists.find(list => list.listId === listId)
+      }
+    })
   }
 
   getListSummaryInfo = () => {
@@ -132,7 +161,7 @@ class App extends Component {
   }
 
   render () {
-    const { todoLists, selectedList } = this.state
+    if (this.state.currentList) this.fb.setListId(this.state.currentList.listId)
     return (
       <div className={css.App}>
         <div className={css.App__Header}>
@@ -149,7 +178,7 @@ class App extends Component {
         {/* {this.state.todoLists.length > 0 ? ( */}
         <div className={css.App_Content}>
           <TodoList
-            list={todoLists[selectedList]}
+            list={this.state.currentList}
             onTodoAdded={this.onTodoAddedHandler}
             onTodoRemoved={this.onTodoRemovedHandler}
             onTodoStatusToggled={this.onTodoStatusToggledHandler}

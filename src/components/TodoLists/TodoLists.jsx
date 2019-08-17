@@ -37,11 +37,12 @@ export default class TodoLists extends Component {
   }
 
   renderChildren = () => {
-    return this.state.lists.map(list => (
+    return this.props.lists.map(list => (
       <TodoListSummary
         key={list.id}
         summary={list}
-        onRemoveItem={this.onRemoveItemHandler}
+        onRemoveItem={this.props.onListRemoved}
+        onListSelected={this.props.onListSelected}
       />
     ))
   }
@@ -59,7 +60,7 @@ export default class TodoLists extends Component {
     return (
       <div className={css.TodoLists}>
         <div className={css.TodoLists__addSection}>
-          <InputBox onAddItem={this.onAddItemHandler}>
+          <InputBox onAddItem={this.props.onListAdded}>
             {this.renderAddButtonContent()}
           </InputBox>
         </div>
