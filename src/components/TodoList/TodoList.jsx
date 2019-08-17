@@ -4,80 +4,56 @@ import css from './TodoList.module.css'
 import Card from '../Card/Card'
 import FilterBar from '../FilterBar/FilterBar'
 import InputBox from '../InputBox/InputBox'
-import TodoItemList from '../TodoItemList/TodoItemList'
+import ListDisplay from '../ListDisplay/ListDisplay'
+import TodoItem from '../TodoItem/TodoItem'
 
 export default class TodoList extends Component {
   state = {
-    items: [],
-    nextItemId: 1,
     filter: 'All'
-  }
-
-  onAddItemHandler = item => {
-    if (item) {
-      this.setState(prevState => {
-        const newItem = {
-          id: prevState.nextItemId,
-          description: item,
-          finished: false
-        }
-        return {
-          items: [...prevState.items, newItem],
-          nextItemId: prevState.nextItemId + 1
-        }
-      })
-    }
-  }
-
-  onToggleStatusHandler = id => {
-    this.setState(prevState => {
-      const updatedItems = prevState.items.map(item => {
-        if (item.id === id) item.finished = !item.finished
-        return item
-      })
-      return { items: updatedItems }
-    })
-  }
-
-  onRemoveItemHandler = id => {
-    this.setState(prevState => ({
-      items: prevState.items.filter(item => item.id !== id)
-    }))
   }
 
   onFilterChangeHandler = name => {
     this.setState({ filter: name })
   }
 
-  getFilteredItems = () => {
+  getFilteredTodos = () => {
     switch (this.state.filter) {
       case 'All':
-        return this.state.items
+        return this.props.list.todos
       case 'Finished':
-        return this.state.items.filter(item => item.finished)
+        return this.props.list.todos.filter(todo => todo.finished)
       case 'Unfinished':
-        return this.state.items.filter(item => !item.finished)
+        return this.props.list.todos.filter(todo => !todo.finished)
       default:
-        return this.state.items
+        return this.props.list.todos
     }
   }
 
+  renderTodoItems = () => {
+    return this.getFilteredTodos().map(todo => (
+      <TodoItem
+        key={todo.id}
+        item={todo}
+        onToggleStatus={this.props.onTodoStatusToggled}
+        onRemoveItem={this.props.onTodoRemoved}
+      />
+    ))
+  }
+
   render () {
+    if (!this.props.list) return null
     return (
       <div className={css.TodoList}>
+        <h1 className={css.header}>{this.props.list.name}</h1>
         <Card>
           <FilterBar onFilterChange={this.onFilterChangeHandler} />
           <InputBox
-            value={this.state.itemDescription}
             onValueChange={this.onValueChangeHandler}
-            onAddItem={this.onAddItemHandler}
-          />
-
-          <TodoItemList
-            items={this.getFilteredItems()}
-            onToggleStatus={this.onToggleStatusHandler}
-            onRemoveItem={this.onRemoveItemHandler}
-          />
+            onAddItem={this.props.onTodoAdded}
+          >
+            Add Todo
+          </InputBox>
+          <ListDisplay>{this.renderTodoItems()} </ListDisplay>
         </Card>
       </div>
     )

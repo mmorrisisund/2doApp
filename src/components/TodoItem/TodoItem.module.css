@@ -1,0 +1,23 @@
+.TodoItem {
+  align-items: center;
+  display: flex;
+  font-size: 1.2rem;
+  line-height: 2.6rem;
+}
+
+.TodoItem_finished {
+  color: #aaa;
+  text-decoration: line-through;
+  width: 100%;
+}
+
+.TodoItem__description {
+  cursor: pointer;
+  transition: font-size 250ms ease-out;
+  user-select: none;
+  width: 100%;
+}
+
+.TodoItem__description:hover {
+  font-size: 1.3rem;
+}

@@ -8,8 +8,14 @@ class InputBox extends Component {
   onValueChangeHandler = e => this.setState({ value: e.target.value })
 
   onClickHandler = e => {
-    this.props.onAddItem(this.state.value)
-    this.setState({ value: '' })
+    if (this.state.value) {
+      this.props.onAddItem(this.state.value)
+      this.setState({ value: '' })
+    }
+  }
+
+  onKeyDownHandler = e => {
+    if (e.key === 'Enter') this.onClickHandler()
   }
 
   render () {
@@ -21,8 +27,10 @@ class InputBox extends Component {
           id='item'
           value={this.state.value}
           onChange={this.onValueChangeHandler}
+          autoComplete='off'
+          onKeyDown={this.onKeyDownHandler}
         />
-        <button onClick={this.onClickHandler}>Add Todo</button>
+        <button onClick={this.onClickHandler}>{this.props.children}</button>
       </div>
     )
   }

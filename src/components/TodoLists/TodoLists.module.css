@@ -1,0 +1,15 @@
+.TodoLists {
+}
+
+.TodoLists__addSection {
+  border-bottom: 2px solid #eee;
+  padding: 30px;
+}
+
+.addButtonContent {
+  display: flex;
+}
+
+.addButtonContent i {
+  margin-right: 5px;
+}
