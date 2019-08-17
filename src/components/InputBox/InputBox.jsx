@@ -8,8 +8,10 @@ class InputBox extends Component {
   onValueChangeHandler = e => this.setState({ value: e.target.value })
 
   onClickHandler = e => {
-    this.props.onAddItem(this.state.value)
-    this.setState({ value: '' })
+    if (this.state.value) {
+      this.props.onAddItem(this.state.value)
+      this.setState({ value: '' })
+    }
   }
 
   onKeyDownHandler = e => {
